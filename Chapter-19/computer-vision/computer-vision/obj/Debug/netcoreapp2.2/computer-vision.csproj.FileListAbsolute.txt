@@ -1,0 +1,16 @@
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\appsettings.Development.json
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\appsettings.json
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\computer-vision.deps.json
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\computer-vision.runtimeconfig.json
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\computer-vision.runtimeconfig.dev.json
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\computer-vision.dll
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.csprojAssemblyReference.cache
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.RazorAssemblyInfo.cache
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.RazorAssemblyInfo.cs
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.AssemblyInfoInputs.cache
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.AssemblyInfo.cs
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.RazorTargetAssemblyInfo.cache
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\bin\Debug\netcoreapp2.2\computer-vision.pdb
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.dll
+C:\Users\Ritesh\source\repos\computer-vision\computer-vision\obj\Debug\netcoreapp2.2\computer-vision.pdb

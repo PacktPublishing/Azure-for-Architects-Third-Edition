@@ -1,0 +1,16 @@
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\appsettings.Development.json
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\appsettings.json
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\ocp-app.deps.json
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\ocp-app.runtimeconfig.json
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\ocp-app.runtimeconfig.dev.json
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\ocp-app.dll
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\bin\Debug\netcoreapp2.2\ocp-app.pdb
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.csprojAssemblyReference.cache
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.RazorAssemblyInfo.cache
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.RazorAssemblyInfo.cs
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.AssemblyInfoInputs.cache
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.AssemblyInfo.cs
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.RazorTargetAssemblyInfo.cache
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.dll
+C:\Users\Ritesh\source\repos\ocp-app\ocp-app\obj\Debug\netcoreapp2.2\ocp-app.pdb
