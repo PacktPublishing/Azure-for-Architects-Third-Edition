@@ -1,0 +1,15 @@
+az group create -n AzureForArchitects -l southeastasia
+
+az aks create --resource-group AzureForArchitects \
+--name AzureForArchitects-AKS \
+--node-count 2 \
+--generate-ssh-keys
+
+az aks install-cli \
+--resource-group AzureForArchitects \
+--name AzureForArchitects-AKS
+
+
+az aks get-credentials \
+--resource-group AzureForArchitects \
+--name AzureForArchitects-AKS

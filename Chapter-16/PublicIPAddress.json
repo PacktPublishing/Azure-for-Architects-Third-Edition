@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "publicIPAddressName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "publicIPAddressType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dnsNameForPublicIP": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLocation": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[parameters('publicIPAddressName')]",
+      "location": "[parameters('resourceLocation')]",
+      "tags": {
+        "displayName": "PublicIPAddress"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "[parameters('publicIPAddressType')]",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('dnsNameForPublicIP')]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "resourceDetails": {
+      "type": "object",
+      "value": "[reference(parameters('publicIPAddressName'))]"
+    }
+  }
+}

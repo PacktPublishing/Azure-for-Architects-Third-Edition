@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subscriptions": {
+      "value": [
+        "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      ]
+    },
+    "resourceGroups": {
+      "value": [
+        "xxxxx",
+        "xxxxx"
+      ]
+    },
+    "rgLocations": {
+      "value": [
+        "West Europe",
+        "East US"
+      ]
+    },
+    "storageName": {
+      "reference": {
+        "keyVault": { "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/<<replace with resource group name>>/providers/Microsoft.KeyVault/vaults/<<replace with vault name>>" },
+        "secretName": "<<replace with secret name>>"
+      }
+    }
+  }
+}

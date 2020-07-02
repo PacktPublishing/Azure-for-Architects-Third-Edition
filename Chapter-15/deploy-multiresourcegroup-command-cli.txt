@@ -1,0 +1,5 @@
+az login
+
+az account set –subscription xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+C:\Users\Ritesh>az deployment create—location westus—template-file "multipleResourceGroups.json" —parameters @"multipleResourceGroups.parameters.json"—verbose

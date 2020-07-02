@@ -1,0 +1,1 @@
+New-AzResourceGroupDeployment  -TemplateFile "<< path to your CrossSubscriptionStorageAccount.json file >>" -ResourceGroupName "<<provide your base subscription resource group name>>" -storagePrefix1 <<provide prefix for first storage account>> -storagePrefix2 <<provide prefix for first storage account>> -verbose

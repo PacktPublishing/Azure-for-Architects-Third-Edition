@@ -1,0 +1,15 @@
+Login-AzAccount -ServicePrincipal -CertificateThumbprint $newCert.Thumbprint -ApplicationId $ServicePrincipal.ApplicationId -Tenant "xxxxxxxxxx-xxxxx-xxxxx" 
+Get-AzContext
+
+$IntegrationResourceGroup = "VaultMonitoring"
+$rgLocation = "West Europe"
+$automationAccountName = "MonitoringKeyVault"
+New-AzResourceGroup -name $IntegrationResourceGroup -Location $rgLocation
+New-AzAutomationAccount -Name $automationAccountName -ResourceGroupName $IntegrationResourceGroup -Location $rgLocation -Plan Free
+
+New-AzAutomationVariable -Name "azuresubscriptionid" -AutomationAccountName $automationAccountName -ResourceGroupName $IntegrationResourceGroup -Value "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -Encrypted $true
+New-AzAutomationVariable -Name "azuretenantid" -AutomationAccountName $automationAccountName -ResourceGroupName $IntegrationResourceGroup -Value "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -Encrypted $true
+New-AzutomationVariable -Name "azureappid" -AutomationAccountName $automationAccountName -ResourceGroupName $IntegrationResourceGroup -Value "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" -Encrypted $true
+
+$securepfxpwd = ConvertTo-SecureString -String 'password' -AsPlainText -Force # Password for the private key PFX certificate
+New-AzAutomationCertificate -Name "AutomationCertifcate" -Path "C:\book\azureautomation.pfx" -Password $securepfxpwd -AutomationAccountName $automationAccountName -ResourceGroupName $IntegrationResourceGroup

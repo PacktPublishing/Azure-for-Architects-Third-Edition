@@ -1,0 +1,2 @@
+New-AzDeployment  -Location "West Europe"  -TemplateFile "multipleResourceGroups.
+json" -TemplateParameterFile "multipleResourceGroups.parameters.json"  -Verbose

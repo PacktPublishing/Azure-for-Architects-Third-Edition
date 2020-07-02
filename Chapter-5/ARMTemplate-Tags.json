@@ -1,0 +1,22 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/
+deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+    {
+      "apiVersion": "2019-06-01",
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat('storage', uniqueString(resourceGroup().id))]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "Dept": "Finance",
+        "Environment": "Production"
+      },
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage",
+      "properties": { }
+    }
+    ]
+}

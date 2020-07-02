@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "hostingPlanNames": {
+      "type": "array"
+    },
+    "subscriptions": {
+      "type": "array",
+      "minLength": 1
+    },
+    "resourceGroups": {
+      "type": "array",
+      "minLength": 1
+    },
+    "rgLocations": {
+      "type": "array",
+      "minLength": 1
+    },
+    "storageName": {
+      "type": "securestring",
+      "minLength": 1
+    },
+    "storageKey": {
+      "type": "securestring",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "templateUrl": "<<replace with the url of the linked arm template file>>",
+    "storageAccountName": "[concat('test',uniqueString(parameters('storageName')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deploymentTest",
+      "apiVersion": "2017-05-10",
+      "subscriptionId": "[parameters('subscriptions')[copyIndex()]]",
+      "resourceGroup": "[parameters('resourceGroups')[copyIndex()]]",
+      "copy": {
+        "count": "[length(parameters('hostingPlanNames'))]",
+        "name": "mywebsites",
+        "mode": "Parallel"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('templateUrl'), parameters('storageKey')) ]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "hostingPlanName": {
+            "value": "[parameters('hostingPlanNames')[copyIndex()]]"
+          },
+          "websitename": {
+            "value": "[parameters('hostingPlanNames')[copyIndex()]]"
+          }
+        }
+
+      }
+    }
+  ]
+
+}

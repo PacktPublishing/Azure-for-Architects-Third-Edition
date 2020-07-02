@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tappdeployment
+  labels:
+    appname: tapp
+    ostype: linux
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      appname: myappnew
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+       maxSurge: 1
+       maxUnavailable: 1  
+  template:
+    metadata:
+      name: mypod
+      labels:
+        appname: myappnew
+    spec:
+      containers:
+      - name: mynewcontainer
+        image: "tacracr.azurecr.io/tapp:latest"
+        ports:
+        - containerPort: 80
+          protocol: TCP
+          name: http

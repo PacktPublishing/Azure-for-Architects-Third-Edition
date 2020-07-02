@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subscriptions": {
+      "type": "array",
+      "minLength": 1
+    },
+    "resourceGroups": {
+      "type": "array",
+      "minLength": 1
+    },
+    "rgLocations": {
+      "type": "array",
+      "minLength": 1
+    },
+    "storageName": {
+      "type": "securestring",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "storageAccountName": "[concat('test',uniqueString(parameters('storageName')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "deployment01",
+      "apiVersion": "2017-05-10",
+      "subscriptionId": "[parameters('subscriptions')[copyIndex()]]",
+      "resourceGroup": "[parameters('resourceGroups')[copyIndex()]]",
+      "copy": {
+        "count": "[length(parameters('resourceGroups'))]",
+        "name": "mystorageaccounts",
+        "mode": "Parallel"
+      },
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "name": "[concat(variables('storageAccountName'), copyIndex())]",
+              "apiVersion": "2017-06-01",
+              "location": "[parameters('rgLocations')[copyIndex()]]",
+              "sku": {
+                "name": "Standard_LRS"
+              },
+              "kind": "Storage",
+              "properties": {
+              }
+            }
+          ]
+        }
+
+      }
+    }
+  ]
+
+}

@@ -1,0 +1,1 @@
+New-OnPremiseHybridWorker.ps1 -AutomationAccountName bookaccount -AAResourceGroupName automationrg -HybridGroupName "localrunbookexecutionengine" -SubscriptionID xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 

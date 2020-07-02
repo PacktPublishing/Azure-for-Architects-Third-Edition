@@ -1,0 +1,107 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLocation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vmSize": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adminUsername": {
+      "type": "securestring",
+      "minLength": 1
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "minLength": 1
+    },
+    "imagePublisher": {
+      "type": "string",
+      "minLength": 1
+    },
+    "imageOffer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "windowsOSVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vhdStorageName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vhdStorageContainerName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "OSDiskName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nicName": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "nicRef": "[resourceId(subscription().subscriptionId,resourceGroup().name,'Microsoft.Network/networkInterfaces', parameters('nicName'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vmName')]",
+      "location": "[parameters('resourceLocation')]",
+      "tags": {
+        "displayName": "VirtualMachine"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('imagePublisher')]",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('windowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "osdisk",
+            "vhd": {
+              "uri": "[concat('https://', parameters('vhdStorageName'),'.blob.core.windows.net/', parameters('vhdStorageContainerName'), '/',parameters('OSDiskName'), '.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[variables('nicRef')]"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "resourceDetails": {
+      "type": "object",
+      "value": "[reference(parameters('vmName'))]"
+    }
+  }
+}

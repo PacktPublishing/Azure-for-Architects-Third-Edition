@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-2
+  labels:
+    appname: nginx
+    ostype: linux
+spec:
+  containers:
+  - name: wenserver-2-container
+    image: nginx
+    ports:
+    - containerPort: 80
+      protocol: TCP
+      name: http
+
+#Creating a deployment that runs six replicas of nginx
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-server
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: nginx-server
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+    spec:
+      containers:
+      - name: nginx-server
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: http
+---
+#Creating Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: nginx-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-lb
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: nginx-server

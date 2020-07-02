@@ -1,0 +1,57 @@
+
+
+
+spark.conf.set("fs.azure.account.key.coronadatastorage.blob.core.windows.net","xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx==")
+
+coviddata = spark.read.format("csv").option("inferSchema", "true").
+option("header", "true").load("wasbs://coviddata@coronadatastorage.blob.
+core.windows.net/owid-covid-data.csv")
+
+
+coviddata.show()
+
+coviddata.printSchema()
+
+coviddata.count()
+
+
+CovidDataSmallSet = coviddata.select("location","date", "new_cases", "new_deaths")
+CovidDataSmallSet.show()
+
+
+CovidDataSmallSet.filter(" location == 'United States' ").show()
+
+CovidDataSmallSet.filter((CovidDataSmallSet.location == 'United States') | (CovidDataSmallSet.location == 'Aruba')).show()
+
+CovidDataSmallSet.describe().show()
+
+
+from pyspark.sql.functions import col
+(coviddata.where(col("diabetes_prevalence").isNull()).count() * 100)/coviddata.count()
+
+
+coviddatanew=coviddata.drop("iso_code").drop("total_tests").drop("total_tests").drop("new_tests").drop("total_tests_per_thousand")
+.drop("new_tests_per_thousand").drop("new_tests_smoothed").drop("new_tests_smoothed_per_thousand ")
+
+
+coviddatanew = coviddata.groupBy('location').agg({'date': 'max'})
+
+
+coviddatauniquecountry = coviddata.filter("date='2020-05-23 00:00:00'")
+coviddatauniquecountry.show()
+
+
+coviddatauniquecountry.rdd.saveAsTextFile("dbfs:/mnt/coronadatastorage/uniquecountry.csv")
+
+
+%fs ls /mnt/coronadatastorage/
+
+
+coviddatauniquecountry.createOrReplaceTempView("corona")
+
+
+spark.sql("select * from corona").show()
+
+
+spark.sql("select * from corona where location in ('India','Angola') orderby location").show()
+

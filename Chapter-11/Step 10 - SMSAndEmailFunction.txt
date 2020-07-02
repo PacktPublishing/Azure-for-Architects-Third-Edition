@@ -1,0 +1,35 @@
+#r "SendGrid"
+#r "Newtonsoft.Json"
+#r "Twilio.Api"
+using System.Net;
+using System;
+using SendGrid.Helpers.Mail;
+using Microsoft.Azure.WebJobs.Host;
+using Newtonsoft.Json;
+using Twilio;
+using System.Configuration;
+public static HttpResponseMessage Run(HttpRequestMessage req, TraceWriter
+log, out Mail message,out SMSMessage sms)
+{
+	log.Info("C# HTTP trigger function processed a request.");
+	string alldata = req.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+	message = new Mail();
+
+	var personalization = new Personalization();
+	personalization.AddBcc(new Email(ConfigurationManager.AppSettings["bccStakeholdersEmail"]));
+	personalization.AddTo(new Email(ConfigurationManager.AppSettings["toStakeholdersEmail"]));
+	
+	var messageContent = new Content("text/html", alldata);
+	message.AddContent(messageContent);
+	message.AddPersonalization(personalization);
+	message.Subject = "Key Vault assets Expiring soon..";
+	message.From = new Email(ConfigurationManager.AppSettings["serviceEmail"]);
+
+	string msg = alldata;
+	sms = new SMSMessage();
+	sms.Body = msg;
+	sms.To = ConfigurationManager.AppSettings["adminPhone"];
+	sms.From = ConfigurationManager.AppSettings["servicePhone"];
+	
+	return req.CreateResponse(HttpStatusCode.OK, "Hello ");
+}

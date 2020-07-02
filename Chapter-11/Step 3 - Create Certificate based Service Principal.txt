@@ -1,0 +1,23 @@
+Connect-AzAccount 
+
+Set-AzContext -SubscriptionId xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+$currentDate = Get-Date
+$expiryDate = $currentDate.AddYears(1)
+$finalDate = $expiryDate.AddYears(1)
+$servicePrincipalName = "https://automation.book.com"
+$automationCertificate = New-SelfSignedCertificate -DnsName $servicePrincipalName -KeyExportPolicy Exportable -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -NotAfter $finalDate -CertStoreLocation "Cert:\LocalMachine\My"
+
+
+$securepfxpwd = ConvertTo-SecureString -String 'password' -AsPlainText -Force # Password for the private key PFX certificate
+$cert1 = Get-Item -Path Cert:\LocalMachine\My\$($automationCertificate.Thumbprint)
+Export-PfxCertificate -Password $securepfxpwd -FilePath " C:\azureautomation.pfx" -Cert $cert1
+
+$newCert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 -ArgumentList "C:\azureautomation.pfx", $securepfxpwd
+$newcertdata = [System.Convert]::ToBase64String($newCert.GetRawCertData())
+
+
+$adAppName = "azure-automation-sp"
+$ServicePrincipal = New-AzADServicePrincipal -DisplayName $adAppName -CertValue $newcertdata -StartDate $newCert.NotBefore -EndDate $newCert.NotAfter
+Sleep 10
+New-AzRoleAssignment -ServicePrincipalName $ServicePrincipal.ApplicationId -RoleDefinitionName Owner -Scope /subscriptions/xxxxx-xxxxxxx-xxxxxxxxxxxxx 

@@ -1,0 +1,7 @@
+Connect-AzAccount 
+
+Set-AzContext -SubscriptionId xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+New-AzResourceGroup -Name IntegrationDemo -Location "West Europe" -Verbose
+
+New-AzKeyVault -Name keyvaultbook -ResourceGroupName IntegrationDemo -Location "West Europe" -EnabledForDeployment -EnabledForTemplateDeployment -EnabledForDiskEncryption -EnableSoftDelete -EnablePurgeProtection -Sku Standard -Verbose

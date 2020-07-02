@@ -1,0 +1,44 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "VMName": {
+      "type": "string",
+      "defaultValue": "sqldock",
+      "metadata": {
+        "description": "This name will also be used to prefix the network security group, storage, virtual network, network card, subnet and public IP address name."
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "[concat(parameters('vmName'),'/containerDeployment')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-06-15",
+      "dependsOn": [
+      ],
+      "tags": {
+        "displayName": "containerDeployment"
+      },
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.2",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "https://armtfiles.blob.core.windows.net/templates/docker.ps1"
+          ],
+          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file docker.ps1')]"
+        },
+        "protectedSettings": {
+        }
+      }
+    }
+  ],
+  "outputs": {
+  }
+}

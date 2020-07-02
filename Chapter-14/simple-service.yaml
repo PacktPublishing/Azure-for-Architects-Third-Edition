@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tappservice
+  labels:
+    appname: tapp
+    ostype: linux
+spec:
+  type: LoadBalancer
+  selector:
+    appname: myappnew
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+    protocol: TCP

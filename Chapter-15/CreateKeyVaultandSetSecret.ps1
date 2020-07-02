@@ -1,0 +1,4 @@
+New-AzResourceGroup -Location <<replace with location of your key vault>> -Name <<replace with name of your resource group for key vault>> -verbose
+New-AzureRmKeyVault -Name <<replace with name of your key vault>> -ResourceGroupName <<replace with name of your resource group for key vault>>  -Location <<replace with location of your key vault>> -EnabledForDeployment -EnabledForTemplateDeployment -EnabledForDiskEncryption -EnableSoftDelete -EnablePurgeProtection -Sku Standard -Verbose 
+
+Set-AzKeyVaultSecret -VaultName <<replace with name of your key vault>> -Name <<replace with name of yoursecret>> -SecretValue $(ConvertTo-SecureString -String <<replace with value of your secret>> -AsPlainText -Force ) -Verbose

@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tappdeployment
+  labels:
+    appname: tapp
+    ostype: linux
+spec:
+  containers:
+  - name: mynewcontainer
+    image: "tacracr.azurecr.io/tapp:latest"
+    ports:
+    - containerPort: 80
+      protocol: TCP
+      name: http

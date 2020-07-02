@@ -1,0 +1,290 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "containerName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "storageType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "publicIPAddressName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "publicIPAddressType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dnsNameForPublicIP": {
+      "type": "string",
+      "minLength": 1
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "addressPrefix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subnetName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subnetPrefix": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nicName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vmSize": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adminUsername": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "minLength": 1
+    },
+    "imagePublisher": {
+      "type": "string",
+      "minLength": 1
+    },
+    "imageOffer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "windowsOSVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vhdStorageName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vhdStorageContainerName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "OSDiskName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "vmName": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "storageRef": "[resourceId(subscription().subscriptionId,resourceGroup().name,'Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+    
+  },
+  "resources": [
+    {
+      "name": "GetStorage",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/Storage.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('vhdStorageName')]"
+          },
+          "storageType": {
+            "value": "[parameters('storageType')]"
+          },
+          "resourceLocation": {
+            "value": "[resourceGroup().location]"
+          }
+        }
+      }
+    },
+    {
+      "name": "GetPublicIP",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/PublicIPAddress.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "publicIPAddressName": {
+            "value": "[parameters('publicIPAddressName')]"
+          },
+          "publicIPAddressType": {
+            "value": "[parameters('publicIPAddressType')]"
+          },
+          "dnsNameForPublicIP": {
+            "value": "[parameters('dnsNameForPublicIP')]"
+          },
+          "resourceLocation": {
+            "value": "[resourceGroup().location]"
+          }
+        }
+      }
+    },
+    {
+      "name": "GetNetwork",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/virtualNetwork.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          },
+          "addressPrefix": {
+            "value": "[parameters('addressPrefix')]"
+          },
+          "subnetName": {
+            "value": "[parameters('subnetName')]"
+          },
+          "subnetPrefix": {
+            "value": "[parameters('subnetPrefix')]"
+          },
+          "resourceLocation": {
+            "value": "[resourceGroup().location]"
+          }
+        }
+      }
+    },
+    {
+      "name": "GetNic",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[resourceId ('Microsoft.Resources/deployments','GetNetwork')]",
+        "[resourceId('Microsoft.Resources/deployments','GetPublicIP')]",
+        "[resourceId ('Microsoft.Resources/deployments','GetStorage')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/NIC.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nicName": {
+            "value": "[parameters('nicName')]"
+          },
+          "publicIpReference": {
+            "value": "[parameters('publicIPAddressName')]"
+          },
+          "virtualNetworkReference": {
+            "value": "[parameters('virtualNetworkName')]"
+          },
+          "subnetReference": {
+            "value": "[parameters('subnetName')]"
+          },
+          "resourceLocation": {
+            "value": "[resourceGroup().location]"
+          }
+        }
+      }
+    },
+    {
+      "name": "GetVM",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments','GetNetwork')]",
+        "[resourceId ('Microsoft.Resources/deployments','GetPublicIP')]",
+        "[resourceId ('Microsoft.Resources/deployments','GetStorage')]",
+        "[resourceId ('Microsoft.Resources/deployments','GetNic')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/VirtualMachine.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "nicName": {
+            "value": "[parameters('nicName')]"
+          },
+          "vmName": {
+            "value": "[parameters('vmName')]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSize')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "resourceLocation": {
+            "value": "[resourceGroup().location]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "imagePublisher": {
+            "value": "[parameters('imagePublisher')]"
+          },
+          "imageOffer": {
+            "value": "[parameters('imageOffer')]"
+          },
+          "windowsOSVersion": {
+            "value": "[parameters('windowsOSVersion')]"
+          },
+          "vhdStorageName": {
+            "value": "[parameters('vhdStorageName')]"
+          },
+          "vhdStorageContainerName": {
+            "value": "[parameters('vhdStorageContainerName')]"
+          },
+          "OSDiskName": {
+            "value": "[parameters('OSDiskName')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "GetCustomScript",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[resourceId ('Microsoft.Resources/deployments','GetVM')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('containerName'),'/CustomScriptExtension.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "vmName": {
+            "value": "[parameters('vmName')]"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "resourceDetails": {
+      "type": "object",
+      "value": "[reference('GetVM').outputs.resourceDetails.value]"
+    }
+  }
+}

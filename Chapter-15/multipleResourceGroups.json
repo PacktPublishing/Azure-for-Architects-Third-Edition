@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/
+deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "resourceGroupInfo": {
+      "type": "array"    },
+    "multiLocation": {
+      "type": "array"     
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "location": "[parameters('multiLocation')[copyIndex()]]",
+      "name": "[parameters('resourceGroupInfo')[copyIndex()]]",
+      "apiVersion": "2019-10-01",
+      "copy": {
+        "name": "allResourceGroups",
+        "count": "[length(parameters('resourceGroupInfo'))]"
+      },
+      "properties": {}
+    }
+  ],
+  "outputs": {}
+}

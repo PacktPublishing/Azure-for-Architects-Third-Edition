@@ -1,0 +1,8 @@
+Connect-AzAccount 
+
+Set-AzContext -SubscriptionId xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+# object id is the ID property available as an output of New-AzureRmADServicePrincipal cmdlet
+
+Set-AzKeyVaultAccessPolicy -VaultName keyvaultbook -ResourceGroupName IntegrationDemo -ObjectId $ServicePrincipal.Id -PermissionsToKeys get,list,create -PermissionsToCertificates get,list,import -PermissionsToSecrets get,list -Verbose
+

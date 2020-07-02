@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "nicName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "publicIpReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "virtualNetworkReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subnetReference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLocation": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "variables": {
+    "publicIpRef": "[resourceId(subscription().subscriptionId,resourceGroup().name,'Microsoft.Network/publicIPAddresses', parameters('publicIpReference'))]",
+    "vnetRef": "[resourceId(subscription().subscriptionId,resourceGroup().name,'Microsoft.Network/virtualNetworks',parameters('virtualNetworkReference'))]",
+    "subnet1Ref": "[concat(variables('vnetRef'),'/subnets/',parameters('subnetReference'))]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[parameters('nicName')]",
+      "location": "[parameters('resourceLocation')]",
+      "tags": {
+        "displayName": "NetworkInterface"
+      },
+      "dependsOn": [
+        // "[concat('Microsoft.Network/publicIPAddresses/',parameters('publicIpReference'))]",
+        // "[concat('Microsoft.Network/virtualNetworks/',parameters('virtualNetworkReference'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[variables('publicIpRef')]"
+              },
+              "subnet": {
+                "id": "[variables('subnet1Ref')]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "resourceDetails": {
+      "type": "object",
+      "value": "[reference(parameters('nicName'))]"
+    }
+  }
+}

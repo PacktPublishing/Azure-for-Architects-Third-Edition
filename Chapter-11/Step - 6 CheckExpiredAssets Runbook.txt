@@ -1,0 +1,90 @@
+$subscriptionID = get-AutomationVariable "azuresubscriptionid"
+$tenantID = get-AutomationVariable "azuretenantid"
+$applicationId = get-AutomationVariable "azureappid"
+$cert = get-AutomationCertificate "AutomationCertifcate"
+$certThumbprint = ($cert.Thumbprint).ToString()
+
+Login-AzAccount -ServicePrincipal -CertificateThumbprint $certThumbprint -ApplicationId $applicationId -Tenant $tenantID
+Set-AzContext -SubscriptionId $subscriptionID
+
+$eventGridName = "ExpiredAssetsKeyVaultEvents"
+$eventGridResourceGroup = "VaultMonitoring"
+$topicEndpoint = (Get-AzEventGridTopic -ResourceGroupName $eventGridResourceGroup -Name $eventGridName).Endpoint
+$keys = (Get-AzEventGridTopicKey -ResourceGroupName $eventGridResourceGroup -Name $eventGridName ).Key1
+
+$keyVaultName = "keyvaultbook"
+
+$keyvaults = Get-AzureRmKeyVault
+foreach($vault in $keyvaults) {
+    $secrets = Get-AzureKeyVaultSecret -VaultName $vault.VaultName
+
+    foreach($secret in $secrets) {
+        if( ![string]::IsNullOrEmpty($secret.Expires) ) {
+            if($secret.Expires.AddMonths(-1) -lt [datetime]::Now)
+            {
+                $secretDataMessage = @{
+                    id = [System.guid]::NewGuid()
+                    subject = "Secret Expiry happening soon !!"
+                    eventType = "Secret Expiry"
+                    eventTime = [System.DateTime]::UtcNow
+                    data = @{
+                    "ExpiryDate" = $secret.Expires
+                    "SecretName" = $secret.Name.ToString()
+                    "VaultName" = $secret.VaultName.ToString()
+                    "SecretCreationDate" = $secret.Created.ToString()
+                    "IsSecretEnabled" = $secret.Enabled.ToString()
+                    "SecretId" = $secret.Id.ToString()
+                    }
+                }
+
+                    $finalBody = "[" + $(ConvertTo-Json $secretDataMessage) + "]"
+
+
+                    $header = @{
+                        "contentType" = "application/json"
+                        "aeg-sas-key" = $keys
+                    }
+
+                    Invoke-WebRequest -Uri $topicEndpoint -Body $finalBody -Headers $header -Method Post -UseBasicParsing
+            }
+        }
+        Start-Sleep -Seconds 5
+    }
+
+    Start-Sleep -Seconds 5
+    $certificates = Get-AzureKeyVaultCertificate -VaultName $vault.VaultName
+
+    foreach($certificate in $certificates) {   
+        if( ![string]::IsNullOrEmpty($certificate.Expires) ) {
+            if($certificate.Expires.AddMonths(-1) -lt [datetime]::Now)
+            {
+                $certificateDataMessage = @{
+                    id = [System.guid]::NewGuid()
+                    subject = "Certificate Expiry happening soon !!"
+                    eventType = "Certificate Expiry"
+                    eventTime = [System.DateTime]::UtcNow
+                    data = @{
+                    "ExpiryDate" = $certificate.Expires
+                    "CertificateName" = $certificate.Name.ToString()
+                    "VaultName" = $certificate.VaultName.ToString()
+                    "CertificateCreationDate" = $certificate.Created.ToString()
+                    "IsCertificateEnabled" = $certificate.Enabled.ToString()
+                    "CertificateId" = $certificate.Id.ToString()
+                    }
+                }
+
+                $finalBody = "[" + $(ConvertTo-Json $certificateDataMessage) + "]"
+
+
+                    $header = @{
+                        "contentType" = "application/json"
+                        "aeg-sas-key" = $keys
+                    }
+
+                    Invoke-WebRequest -Uri $topicEndpoint -Body $finalBody -Headers $header -Method Post -UseBasicParsing
+            }
+        } 
+        
+        Start-Sleep -Seconds 5
+    }
+}
